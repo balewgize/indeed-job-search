@@ -24,13 +24,30 @@ def get_location():
 
 def get_job_type():
     """ Filter by job type."""
-    pass
+    type_list = ['fulltime', 'contract', 'parttime', 'internship', 'temporary']
+    print("Select the type of job you want to work.")
+    for i, job in enumerate(type_list):
+        print(f'{i+1} -> {job}')
+    ch = input('Your choice: ')
+    valid_choices = [i+1 for i in  range(len(type_list))]
+    if ch in valid_choices:
+        return type_list[ch - 1]
+    else:
+        get_job_type()
 
 def get_experience():
     """ Filter by experience level."""
     exp_list = ['Entry level', 'Mid level', 'Senior level']
-    pass
-
+    print("Select the level of experience you have.")
+    for i, expr in enumerate(exp_list):
+        print(f'{i+1} -> {expr}')
+    ch = input('Your choice: ')
+    valid_choices = [i+1 for i in  range(len(exp_list))]
+    if ch in valid_choices:
+        return exp_list[ch - 1]
+    else:
+        get_experience()
+        
 def get_developer_skill():
     """ Filter by developer skills."""
     skill_list = ['python', 'java', 'javascript', 'django', 'sql', 'react']
