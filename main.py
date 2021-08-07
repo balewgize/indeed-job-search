@@ -29,6 +29,7 @@ def basic_search():
     response = requests.get('https://www.indeed.com/jobs', params=params)
     return response
 
+
 def advanced_search():
     """ Perform advanced job searching by filtering using different parameters."""
     position = job_filter.get_position()
@@ -42,6 +43,8 @@ def advanced_search():
         ('jt', job_type),
         ('explvl', experience),
     )
+    response = requests.get('https://www.indeed.com/jobs', params=params)
+    return response
 
 
 def get_job_detail(card):
