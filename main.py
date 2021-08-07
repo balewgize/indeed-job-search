@@ -12,20 +12,15 @@ import csv
 import requests
 from datetime import date, datetime
 from bs4 import BeautifulSoup
-from requests.api import head
+from requests.api import post
+
+import job_filter
 
 
 def basic_search():
     """ Perform basic job search based on postion and location."""
-    position = input("What postion you want to apply?\n")
-    if position == '':
-        print('Please specify the postion you want to apply.')
-        sys.exit()
-    
-    location = input("Where do you want to work?\n")    
-    if location == '':
-        print('Please specify the location you want to work on.')
-        sys.exit()
+    position = job_filter.get_position()
+    location = job_filter.get_location()
 
     params = (
         ('q', position),
@@ -33,6 +28,20 @@ def basic_search():
     )
     response = requests.get('https://www.indeed.com/jobs', params=params)
     return response
+
+def advanced_search():
+    """ Perform advanced job searching by filtering using different parameters."""
+    position = job_filter.get_position()
+    location = job_filter.get_location()
+    job_type = job_filter.get_job_type()
+    experience = job_filter.get_experience()
+
+    params = (
+        ('q', position),
+        ('l', location),
+        ('jt', job_type),
+        ('explvl', experience),
+    )
 
 
 def get_job_detail(card):
