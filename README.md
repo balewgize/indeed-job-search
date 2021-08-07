@@ -1,1 +1,1 @@
-# indeed-job-notifier
+# Indeed Job post notifier

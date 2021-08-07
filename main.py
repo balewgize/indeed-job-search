@@ -8,9 +8,12 @@ Date: August, 2013 E.C
 """
 
 import sys
+import csv
 import requests
-from datetime import datetime
+from datetime import date, datetime
 from bs4 import BeautifulSoup
+from requests.api import head
+
 
 def basic_search():
     """ Perform basic job search based on postion and location."""
@@ -46,7 +49,16 @@ def get_job_detail(card):
     except AttributeError:
         salary = ''
 
-    job = [job_title, company_name, company_location, job_summary, posted, today, job_url]
+    job = {
+        'job_title': job_title,
+        'company_name': company_name,
+        'company_location': company_location,
+        'job_summary': job_summary,
+        'salary': salary,
+        'posted': posted,
+        'extracted': today,
+        'job_url': job_url
+    }
     return job
 
 
@@ -59,6 +71,17 @@ def extract_page(html):
         job_list.append(job)
 
     return job_list
+
+
+def save_to_csv(job_list):
+    """ Write the list of jobs given to a csv file."""
+    fieldnames = ['job_title', 'company_name', 'company_location', 'job_summary',
+                'salary', 'posted', 'extracted', 'job_url']
+    today = datetime.today().strftime('%Y-%m-%d')
+    with open(f'job-list-{today}.csv', 'w') as file:
+        csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+        csv_writer.writerows(job_list)
 
 
 
@@ -74,9 +97,7 @@ def main():
         response = basic_search()
         html = BeautifulSoup(response.content, 'lxml')
         job_list = extract_page(html)
-        print(len(job_list))
-        print(job_list[0])
-
+        save_to_csv(job_list)
 
 if __name__ == '__main__':
-    main()
+    main() 
