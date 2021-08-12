@@ -24,7 +24,7 @@ def get_positions():
 def get_locations():
     """ Filter by location."""
     print("\nWhere would you like to work?\n")
-    print('Enter one position per line. (type "END" when finished)\n') 
+    print('Enter one location per line. (type "END" when finished)\n') 
 
     locations = []
 
@@ -36,35 +36,53 @@ def get_locations():
 
     return locations
 
+
 def get_job_types():
     """ Filter by job type."""
-    # fulltime, contract, parttime
     type_list = ['fulltime', 'contract', 'parttime', 'internship']
-    print("Select the type of job you want to work.")
-    for i, job in enumerate(type_list):
-        print(f'{i+1} -> {job}')
-    ch = input('Your choice: ')
-    valid_choices = [i+1 for i in  range(len(type_list))]
-    if ch in valid_choices:
-        return type_list[ch - 1]
-    else:
-        get_job_type()
+    types = ['Full time', 'Contract', 'Part time', 'Internship']
+    print("\nWhat type of jobs would you like to work on?\n")
+    print(*types, sep=', ')
+    print('\nEnter one job type per line. (type "END" when finished)\n')
+    
+    job_types = set()
+
+    answer = input()
+    while answer != "END":            
+        if answer != '':
+            if answer.lower().startswith('full'):
+                job_types.add(type_list[0])
+            if answer.lower().startswith('cont'):
+                job_types.add(type_list[1])
+            if answer.lower().startswith('part'):
+                job_types.add(type_list[2])
+            if answer.lower().startswith('intern'):
+                job_types.add(type_list[3])
+        answer = input()
+
+    return job_types
+
 
 def get_experiences():
     """ Filter by experience level."""
-    # entry_level, mid_level, senior_level
-    exp_list = ['Entry level', 'Mid level', 'Senior level']
-    print("Select the level of experience you have.")
-    for i, expr in enumerate(exp_list):
-        print(f'{i+1} -> {expr}')
-    ch = input('Your choice: ')
-    valid_choices = [i+1 for i in  range(len(exp_list))]
-    if ch in valid_choices:
-        return exp_list[ch - 1]
-    else:
-        get_experiences()
+    exp_list = ['entry_level', 'mid_level', 'senior_level']
+    exps = ['Entry level', 'Mid level', 'Senior level']
 
-def get_developer_skill():
-    """ Filter by developer skills."""
-    skill_list = ['python', 'java', 'javascript', 'django', 'sql', 'react']
-    pass
+    print("\nWhat level of experience(s) do you have?\n")
+    print(*exps, sep=', ')
+    print("\nEnter your level of experience one per line. (type END when finished)\n")
+
+    experience = set()
+
+    answer = input()
+    while answer != "END":            
+        if answer != '':
+            if answer.lower().startswith('entry'):
+                experience.add(exp_list[0])
+            if answer.lower().startswith('mid'):
+                experience.add(exp_list[1])
+            if answer.lower().startswith('senior'):
+                experience.add(exp_list[2])
+        answer = input()
+
+    return experience
