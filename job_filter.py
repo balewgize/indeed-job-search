@@ -4,15 +4,16 @@ Filter job posts based on different parameters
 
 def get_positions():
     """ Filter by postion."""
+    print('-'*50)
     print("\nWhat postion you want to apply for?\n")
     print('Enter one position per line. (type "END" when finished)\n')
 
-    positions = []
+    positions = set()
 
     answer = input()
     while answer != "END":            
         if answer != '':
-            positions.append(answer)
+            positions.add(answer)
         answer = input()
 
     return positions
@@ -20,15 +21,16 @@ def get_positions():
 
 def get_locations():
     """ Filter by location."""
+    print('-'*50)
     print("\nWhere would you like to work?\n")
     print('Enter one location per line. (type "END" when finished)\n') 
 
-    locations = []
+    locations = set()
 
     answer = input()
     while answer != "END":            
         if answer != '':
-            locations.append(answer)
+            locations.add(answer)
         answer = input()
 
     return locations
@@ -36,9 +38,10 @@ def get_locations():
 
 def get_job_types():
     """ Filter by job type."""
+    print('-'*50)
     type_list = ['fulltime', 'contract', 'parttime', 'internship']
     types = ['Full time', 'Contract', 'Part time', 'Internship']
-    
+
     print("\nWhat type of jobs would you like to work on?\n")
     print(*types, sep=', ')
     print('\nEnter one job type per line. (type "END" when finished)\n')
@@ -63,6 +66,7 @@ def get_job_types():
 
 def get_experiences():
     """ Filter by experience level."""
+    print('-'*50)
     exp_list = ['entry_level', 'mid_level', 'senior_level']
     exps = ['Entry level', 'Mid level', 'Senior level']
 
