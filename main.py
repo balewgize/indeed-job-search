@@ -20,55 +20,12 @@ from bs4 import BeautifulSoup
 import job_filter
 
 
-# def basic_search():
-#     """ Perform basic job search based on postion and location."""
-#     # position = job_filter.get_position()
-#     # location = job_filter.get_location()
-#     position = '"Python Developer"'
-#     location = 'Remote'
-#     sort_by = 'date'
-#     last_three_days = '3'
-
-#     params = (
-#         ('q', position),
-#         ('l', location),
-#         ('sort', sort_by),
-#         ('fromage', last_three_days),
-#     )
-
-#     headers = {
-#         'user-agent': 'Mozilla/5.0',
-#     }
-
-#     response = requests.get('https://www.indeed.com/jobs', headers=headers, params=params)
-#     return response
-
-
 def search_jobs(preferences):
     """ Search jobs based on user preference."""
-    # position = '"Python Developer"'
-    # location = 'Remote'
-    # job_type = 'fulltime' # fulltime, contract, parttime
-    # experience = 'entry_level' # entry_level, mid_level, senior_level
-
-    # sort_by = 'date'
-    # last_three_days = '3'
-
-    # params = (
-    #     ('q', position),
-    #     ('l', location),
-    #     ('jt', job_type),
-    #     ('explvl', experience),
-    #     ('sort', sort_by),
-    #     ('fromage', last_three_days),
-    # )
-
     url = 'https://www.indeed.com/jobs'
-
     headers = {
         'user-agent': 'Mozilla/5.0',
     }
-
     response = requests.get(url, headers=headers, params=preferences)
     return response
 
