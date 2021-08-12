@@ -11,7 +11,7 @@ def get_positions():
     positions = []
 
     answer = input()
-    while answer != "END":            
+    while answer.lower() != "end":           
         if answer != '':
             positions.append(f'"{answer}"')
         answer = input()
@@ -28,7 +28,7 @@ def get_locations():
     locations = []
 
     answer = input()
-    while answer != "END":            
+    while answer.lower() != "end":            
         if answer != '':
             locations.append(answer)
         answer = input()
@@ -49,7 +49,7 @@ def get_job_types():
     job_types = []
 
     answer = input()
-    while answer != "END":            
+    while answer.lower() != "end":           
         if answer != '':
             if answer.lower().startswith('full'):
                 job_types.append(type_list[0])
@@ -77,7 +77,7 @@ def get_experiences():
     experience = []
 
     answer = input()
-    while answer != "END":            
+    while answer.lower() != "end":            
         if answer != '':
             if answer.lower().startswith('entry'):
                 experience.append(exp_list[0])
