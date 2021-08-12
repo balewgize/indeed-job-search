@@ -5,26 +5,41 @@ Filter job posts based on different parameters
 import sys
 
 
-def get_position():
+def get_positions():
     """ Filter by postion."""
+    print("\nWhat postion you want to apply for?\n")
+    print('Enter one position per line. (type "END" when finished)\n')
 
-    position = input("What postion you want to apply?\n")
-    if position == '':
-        print('Please specify the position you want to work on.')
-        get_location()
-    return position
+    positions = []
 
-def get_location():
+    answer = input()
+    while answer != "END":            
+        if answer != '':
+            positions.append(answer)
+        answer = input()
+
+    return positions
+
+
+def get_locations():
     """ Filter by location."""
-    location = input("Where do you want to work?\n")    
-    if location == '':
-        print('Please specify the location you want to work on.')
-        get_location()
-    return location
+    print("\nWhere would you like to work?\n")
+    print('Enter one position per line. (type "END" when finished)\n') 
 
-def get_job_type():
+    locations = []
+
+    answer = input()
+    while answer != "END":            
+        if answer != '':
+            locations.append(answer)
+        answer = input()
+
+    return locations
+
+def get_job_types():
     """ Filter by job type."""
-    type_list = ['fulltime', 'contract', 'parttime', 'internship', 'temporary']
+    # fulltime, contract, parttime
+    type_list = ['fulltime', 'contract', 'parttime', 'internship']
     print("Select the type of job you want to work.")
     for i, job in enumerate(type_list):
         print(f'{i+1} -> {job}')
@@ -35,8 +50,9 @@ def get_job_type():
     else:
         get_job_type()
 
-def get_experience():
+def get_experiences():
     """ Filter by experience level."""
+    # entry_level, mid_level, senior_level
     exp_list = ['Entry level', 'Mid level', 'Senior level']
     print("Select the level of experience you have.")
     for i, expr in enumerate(exp_list):
@@ -46,14 +62,9 @@ def get_experience():
     if ch in valid_choices:
         return exp_list[ch - 1]
     else:
-        get_experience()
-        
+        get_experiences()
+
 def get_developer_skill():
     """ Filter by developer skills."""
     skill_list = ['python', 'java', 'javascript', 'django', 'sql', 'react']
-    pass
-
-def get_date_posted():
-    """ Filter by date posted."""
-    date_list = [1, 3, 7, 14]
     pass

@@ -9,6 +9,7 @@ Author: @balewgize
 Date: August, 2013 E.C
 """
 
+import os
 import csv
 import time
 import requests
@@ -43,21 +44,31 @@ def basic_search():
     return response
 
 
-# def advanced_search():
-#     """ Perform advanced job searching by filtering using different parameters."""
-#     position = job_filter.get_position()
-#     location = job_filter.get_location()
-#     job_type = job_filter.get_job_type()
-#     experience = job_filter.get_experience()
+def advanced_search():
+    """ Filter the jobs to match the user preference."""
+    position = '"Python Developer"'
+    location = 'Remote'
+    job_type = 'fulltime' # fulltime, contract, parttime
+    experience = 'entry_level' # entry_level, mid_level, senior_level
 
-#     params = (
-#         ('q', position),
-#         ('l', location),
-#         ('jt', job_type),
-#         ('explvl', experience),
-#     )
-#     response = requests.get('https://www.indeed.com/jobs', params=params)
-#     return response
+    sort_by = 'date'
+    last_three_days = '3'
+
+    params = (
+        ('q', position),
+        ('l', location),
+        ('jt', job_type),
+        ('explvl', experience),
+        ('sort', sort_by),
+        ('fromage', last_three_days),
+    )
+
+    headers = {
+        'user-agent': 'Mozilla/5.0',
+    }
+
+    response = requests.get('https://www.indeed.com/jobs', headers=headers, params=params)
+    return response
 
 
 def get_job_detail(card):
@@ -136,8 +147,59 @@ def save_to_csv(job_list):
         csv_writer.writeheader()
         csv_writer.writerows(job_list)
 
+def get_user_preference():
+    """ Get the user preference and save for later use."""
+    positions = job_filter.get_positions()
+    locations = job_filter.get_locations()
+    job_types = job_filter.get_job_types() 
+    experiences = job_filter.get_experiences() 
+
+    sort_by = 'date'
+    last_three_days = '3'
+
+    params = (
+        ('q', positions[0]),
+        ('l', locations[0]),
+        ('jt', job_types[0]),
+        ('explvl', experiences[0]),
+        ('sort', sort_by),
+        ('fromage', last_three_days),
+    )
+
+
+def welcome():
+    """ Show welcome message."""
+    msg = 'Indeed Job Post Notifier'
+    print(f"'-'*50\n{'Welcome!':^50}\n{msg:^50}\n{'-'*50}")
+    print("""
+    If it is your first time using the app,
+    let's see what it does assuming your are
+    searching for postion "Python Developer"
+    and you want to work "remotely".
+
+    If it finds jobs relevant to you, it will
+    send an email so that you can apply before
+    a deadline.
+
+    So to get email notificaions and automate
+    job searching on indeed, please tell me 
+    your preference so that I can check up new
+    job posts every three days and send an email
+    when I found relevant jobs for you.
+    """)
+    print('-'*50, '\n')
+
 
 def main():
+    welcome()
+
+    ch = input('Would you like to update your preference now? [Y/N]: ')
+    if ch.lower() == 'y' or ch.lower() == 'yes':
+        get_user_preference()
+
+    else:
+        print('Thank you!.')
+
     response = basic_search()
 
     first_page = BeautifulSoup(response.content, 'lxml')
