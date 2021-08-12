@@ -8,12 +8,12 @@ def get_positions():
     print("\nWhat postion you want to apply for?\n")
     print('Enter one position per line. (type "END" when finished)\n')
 
-    positions = set()
+    positions = []
 
     answer = input()
     while answer != "END":            
         if answer != '':
-            positions.add(answer)
+            positions.append(f'"{answer}"')
         answer = input()
 
     return positions
@@ -25,12 +25,12 @@ def get_locations():
     print("\nWhere would you like to work?\n")
     print('Enter one location per line. (type "END" when finished)\n') 
 
-    locations = set()
+    locations = []
 
     answer = input()
     while answer != "END":            
         if answer != '':
-            locations.add(answer)
+            locations.append(answer)
         answer = input()
 
     return locations
@@ -46,19 +46,19 @@ def get_job_types():
     print(*types, sep=', ')
     print('\nEnter one job type per line. (type "END" when finished)\n')
     
-    job_types = set()
+    job_types = []
 
     answer = input()
     while answer != "END":            
         if answer != '':
             if answer.lower().startswith('full'):
-                job_types.add(type_list[0])
+                job_types.append(type_list[0])
             if answer.lower().startswith('cont'):
-                job_types.add(type_list[1])
+                job_types.append(type_list[1])
             if answer.lower().startswith('part'):
-                job_types.add(type_list[2])
+                job_types.append(type_list[2])
             if answer.lower().startswith('intern'):
-                job_types.add(type_list[3])
+                job_types.append(type_list[3])
         answer = input()
 
     return job_types
@@ -74,17 +74,17 @@ def get_experiences():
     print(*exps, sep=', ')
     print("\nEnter your level of experience one per line. (type END when finished)\n")
 
-    experience = set()
+    experience = []
 
     answer = input()
     while answer != "END":            
         if answer != '':
             if answer.lower().startswith('entry'):
-                experience.add(exp_list[0])
+                experience.append(exp_list[0])
             if answer.lower().startswith('mid'):
-                experience.add(exp_list[1])
+                experience.append(exp_list[1])
             if answer.lower().startswith('senior'):
-                experience.add(exp_list[2])
+                experience.append(exp_list[2])
         answer = input()
 
     return experience
