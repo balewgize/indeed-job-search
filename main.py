@@ -20,54 +20,56 @@ from bs4 import BeautifulSoup
 import job_filter
 
 
-def basic_search():
-    """ Perform basic job search based on postion and location."""
-    # position = job_filter.get_position()
-    # location = job_filter.get_location()
-    position = '"Python Developer"'
-    location = 'Remote'
-    sort_by = 'date'
-    last_three_days = '3'
+# def basic_search():
+#     """ Perform basic job search based on postion and location."""
+#     # position = job_filter.get_position()
+#     # location = job_filter.get_location()
+#     position = '"Python Developer"'
+#     location = 'Remote'
+#     sort_by = 'date'
+#     last_three_days = '3'
 
-    params = (
-        ('q', position),
-        ('l', location),
-        ('sort', sort_by),
-        ('fromage', last_three_days),
-    )
+#     params = (
+#         ('q', position),
+#         ('l', location),
+#         ('sort', sort_by),
+#         ('fromage', last_three_days),
+#     )
+
+#     headers = {
+#         'user-agent': 'Mozilla/5.0',
+#     }
+
+#     response = requests.get('https://www.indeed.com/jobs', headers=headers, params=params)
+#     return response
+
+
+def search_jobs(preferences):
+    """ Search jobs based on user preference."""
+    # position = '"Python Developer"'
+    # location = 'Remote'
+    # job_type = 'fulltime' # fulltime, contract, parttime
+    # experience = 'entry_level' # entry_level, mid_level, senior_level
+
+    # sort_by = 'date'
+    # last_three_days = '3'
+
+    # params = (
+    #     ('q', position),
+    #     ('l', location),
+    #     ('jt', job_type),
+    #     ('explvl', experience),
+    #     ('sort', sort_by),
+    #     ('fromage', last_three_days),
+    # )
+
+    url = 'https://www.indeed.com/jobs'
 
     headers = {
         'user-agent': 'Mozilla/5.0',
     }
 
-    response = requests.get('https://www.indeed.com/jobs', headers=headers, params=params)
-    return response
-
-
-def advanced_search():
-    """ Filter the jobs to match the user preference."""
-    position = '"Python Developer"'
-    location = 'Remote'
-    job_type = 'fulltime' # fulltime, contract, parttime
-    experience = 'entry_level' # entry_level, mid_level, senior_level
-
-    sort_by = 'date'
-    last_three_days = '3'
-
-    params = (
-        ('q', position),
-        ('l', location),
-        ('jt', job_type),
-        ('explvl', experience),
-        ('sort', sort_by),
-        ('fromage', last_three_days),
-    )
-
-    headers = {
-        'user-agent': 'Mozilla/5.0',
-    }
-
-    response = requests.get('https://www.indeed.com/jobs', headers=headers, params=params)
+    response = requests.get(url, headers=headers, params=preferences)
     return response
 
 
@@ -140,22 +142,58 @@ def extract_next_pages(current_page):
 
 def save_to_csv(job_list):
     """ Write the list of jobs given to a csv file."""
-    fieldnames = job_list[0].keys()
     today = datetime.today().strftime('%Y-%m-%d')
-    with open(f'job-list-{today}.csv', 'w') as file:
+    filename = f'Desktop/job-list-{today}.csv'
+    full_path = os.path.join(get_home_dir(), filename)
+
+    with open(full_path, 'w') as file:
+        fieldnames = job_list[0].keys()
         csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
         csv_writer.writeheader()
         csv_writer.writerows(job_list)
 
-def get_user_preference():
-    """ Get the user preference and save for later use."""
+    print("The result has been saved to a csv file on your Desktop.")
+
+
+def get_user_preferences():
+    """ Get the user preference to save for later use."""
     positions = job_filter.get_positions()
     locations = job_filter.get_locations()
     job_types = job_filter.get_job_types() 
-    experiences = job_filter.get_experiences() 
+    experiences = job_filter.get_experiences()
+
+    save_user_preferences(positions, locations, job_types, experiences)
+
+
+def get_home_dir():
+    """ Get the home directory of the user."""
+    if os.name == 'nt':  
+        # windows OS
+        home_dir = 'C:' + os.getenv('HOMEPATH')
+    else:  
+        # Unix-like OS
+        home_dir = os.getenv('HOME')
+
+    return home_dir
+
+
+def read_user_preferences():
+    """ Read preferences of the user if it has been saved."""
+    home_dir = get_home_dir()
+    full_path = os.path.join(home_dir, '.job-preferences.txt')
+
+    with open(full_path) as file:
+        lines = file.readlines()
+        lines = list(map(lambda x: x.replace('\n', ''), lines))
+        positions = lines[0].split(',')
+        locations = lines[1].split(',')
+        job_types = lines[2].split(',')
+        experiences = lines[3].split(',')
 
     sort_by = 'date'
     last_three_days = '3'
+
+    # how to handle all variation of this preferences?
 
     params = (
         ('q', positions[0]),
@@ -165,49 +203,94 @@ def get_user_preference():
         ('sort', sort_by),
         ('fromage', last_three_days),
     )
+    return params
+
+
+def save_user_preferences(positions, locations, job_types, experiences):
+    """ Save user preferences for later use."""
+    def convert_to_str(iterable):
+        """ Conver an iterable to comma separated string."""
+        line = ''
+        for item in iterable:
+            line += item + ','
+        return line[:-1]
+
+    filename = '.job-preferences.txt'
+    home_dir = get_home_dir()
+    full_path = os.path.join(home_dir, filename)
+    
+    with open(full_path, 'w') as file:
+        file.write(convert_to_str(positions)+'\n')
+        file.write(convert_to_str(locations)+'\n')
+        file.write(convert_to_str(job_types)+'\n')
+        file.write(convert_to_str(experiences)+'\n')
+
+
+def clear_screen():
+    """ Clears the stdout screen."""
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 
 def welcome():
     """ Show welcome message."""
     msg = 'Indeed Job Post Notifier'
-    print(f"'-'*50\n{'Welcome!':^50}\n{msg:^50}\n{'-'*50}")
+    print(f"{'-'*50}\n{'Welcome!':^50}\n{msg:^50}\n{'-'*50}")
     print("""
-    If it is your first time using the app,
-    let's see what it does assuming your are
-    searching for postion "Python Developer"
-    and you want to work "remotely".
+    It is your first time using the app,
+    please tell me your job preferences so that
+    I can automate job searching on indeed.com
 
-    If it finds jobs relevant to you, it will
-    send an email so that you can apply before
-    a deadline.
+    If I found jobs relevant to you, I will
+    send you an email immediately so you can 
+    apply before a deadline.
 
-    So to get email notificaions and automate
-    job searching on indeed, please tell me 
-    your preference so that I can check up new
-    job posts every three days and send an email
-    when I found relevant jobs for you.
+    Besides that I will check indeed.com every
+    three days and tell you report of jobs
+    posted during those days. 
     """)
     print('-'*50, '\n')
 
 
 def main():
-    welcome()
+    clear_screen()
 
-    ch = input('Would you like to update your preference now? [Y/N]: ')
-    if ch.lower() == 'y' or ch.lower() == 'yes':
-        get_user_preference()
+    # check if the user have set preferences
+    home_dir = get_home_dir()
+    filename = '.job-preferences.txt'
+    full_path = os.path.join(home_dir, filename)
+
+    if os.path.exists(full_path):
+        # the user has set preference, so read and use that
+        preferences = read_user_preferences()
+
+        # make job search based on user preferences
+        print("\nSearching for jobs...")
+        response = search_jobs(preferences)
+
+        first_page = BeautifulSoup(response.content, 'lxml')
+        all_jobs = extract_page(first_page)
+        job_list = extract_next_pages(first_page)
+        all_jobs.extend(job_list)
+
+        # now look jobs retrived and send an email
+
+        save_to_csv(all_jobs)
 
     else:
-        print('Thank you!.')
+        welcome()
 
-    response = basic_search()
+        ch = input('Would you like to set/update your preference now? [Y/N]: ')
+        if ch.lower() == 'y' or ch.lower() == 'yes':
+            get_user_preferences()
+            clear_screen()
+            print('\nYour job preferences has been saved.')
+            print('You can now run the script again to search for jobs matching your preferences.')
+        else:
+            print('Thank you!.')
 
-    first_page = BeautifulSoup(response.content, 'lxml')
-    all_jobs = extract_page(first_page)
-    job_list = extract_next_pages(first_page)
-    all_jobs.extend(job_list)
-
-    save_to_csv(all_jobs)
 
 if __name__ == '__main__':
     main() 
