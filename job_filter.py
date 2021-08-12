@@ -2,9 +2,6 @@
 Filter job posts based on different parameters
 """
 
-import sys
-
-
 def get_positions():
     """ Filter by postion."""
     print("\nWhat postion you want to apply for?\n")
@@ -41,6 +38,7 @@ def get_job_types():
     """ Filter by job type."""
     type_list = ['fulltime', 'contract', 'parttime', 'internship']
     types = ['Full time', 'Contract', 'Part time', 'Internship']
+    
     print("\nWhat type of jobs would you like to work on?\n")
     print(*types, sep=', ')
     print('\nEnter one job type per line. (type "END" when finished)\n')
