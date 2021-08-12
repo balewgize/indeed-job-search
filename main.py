@@ -62,13 +62,21 @@ def basic_search():
 
 def get_job_detail(card):
     """ Extract the Job details for a single job."""
-    job_title = card.find('h2', 'jobTitle').contents[-1].text.strip()
-    company_name = card.find('span', 'companyName').text.strip()
-    company_location = card.find('div', 'companyLocation').contents[0].strip()
+    title_con = card.find('h2', 'jobTitle').contents[-1]
+    job_title = title_con.text.strip()
+
+    company_con = card.find('span', 'companyName')
+    company = company_con.text.strip()
+
+    location_con = card.find('div', 'companyLocation')
+    location = location_con.contents[0].strip()
+
     posted = card.find('span', 'date').text.strip()
     today = datetime.today().strftime("%Y-%m-%d")
+
     job_summary = card.find('div', 'job-snippet').text.strip()
     job_url = f"https://www.indeed.com{card.get('href')}"
+
     try:
         salary = card.find('span', 'salary-snippet').text.strip()
     except AttributeError:
@@ -76,8 +84,8 @@ def get_job_detail(card):
 
     job = {
         'job_title': job_title,
-        'company_name': company_name,
-        'company_location': company_location,
+        'company': company,
+        'location': location,
         'salary': salary,
         'posted': posted,
         'extracted': today,
