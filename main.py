@@ -77,6 +77,7 @@ def welcome():
 
 def main():
     clear_screen()
+    welcome()
 
     profile = Profile()
     email_sender = EmailSender()
