@@ -1,5 +1,5 @@
 """
-Indeed job notifier is a python script that automates job searching on
+Indeed job search is a python script that automates job searching on
 www.indeed.com and send notification email to the user when a new job 
 matching the user's profile is posted.
 
@@ -8,13 +8,51 @@ It checks for new job posts every 3 days.
 Author: @balewgize
 Date: August, 2013 E.C
 """
-
-import os, csv
 from bs4 import BeautifulSoup
 
 from email_sender import EmailSender
 from user_preferences import Profile
 from job_scraper import IndeedJobScraper
+
+
+def send_email(to, params, total):
+    """ Send email notification about the jobs posted."""
+    import requests
+    from datetime import datetime
+    today = datetime.today().strftime('%Y-%m-%d')
+    base_url = 'https://www.indeed.com/jobs'
+    job_url = requests.get(base_url, params=params).url
+
+    subject = f'New Indeed jobs for you on {today}'
+
+    text = f"""\
+        Hello Alemnew,
+
+        {total} New jobs matching your preference have been posted in the last three days
+
+        See details and Apply here: {job_url}
+
+        Good Luck,
+        Python Email Sender
+    """
+
+    html = f"""\
+        <html>
+        <body>
+            <p> Hello Alemnew, <br> <br>
+                {total} New jobs matching your preference have been posted in the last three days.
+                <br><br>
+                Take a look here: <br> {job_url}
+            </p>
+            <p>
+                Good Luck, <br>
+                Python Email Sender
+            </p>
+        </body>
+        </html>
+    """
+    email_sender = EmailSender()
+    email_sender.send(to, subject, text, html)
 
 
 def save_to_excel(job_list):
@@ -24,6 +62,7 @@ def save_to_excel(job_list):
 
 def save_to_csv(job_list):
     """ Write the list of jobs given to a csv file."""
+    import os, csv
     from datetime import datetime
 
     today = datetime.today().strftime('%Y-%m-%d')
@@ -42,6 +81,7 @@ def save_to_csv(job_list):
 
 def get_home_dir():
     """ Get the home directory of the user based the Operating System."""
+    import os
     if os.name == 'nt': 
         return os.path.expanduser('~\\')
     else:
@@ -49,6 +89,7 @@ def get_home_dir():
 
 def clear_screen():
     """ Clears the stdout screen."""
+    import os
     if os.name == 'nt':
         os.system('cls')
     else:
@@ -57,20 +98,21 @@ def clear_screen():
 
 def welcome():
     """ Show welcome message."""
-    msg = 'Indeed Job Post Notifier'
+    msg = 'Indeed Job Search'
     print(f"{'-'*50}\n{'Welcome!':^50}\n{msg:^50}\n{'-'*50}")
     print("""
-    It is your first time using the app,
-    please tell me your job preferences so that
-    I can automate job searching on indeed.com
+    I use your job preference to search for jobs
+    relevant to you.
 
-    If I found jobs relevant to you, I will
-    send you an email immediately so you can 
+    When I found relevant jobs, I immediately
+    send you an email notification so you can 
     apply before a deadline.
 
-    Besides that I will check indeed.com every
-    three days and tell you report of jobs
-    posted during those days. 
+    Lastly, I will search for jobs every
+    three days. No need of always checking 
+    the website. 
+
+    Now job searching on indeed.com is automated.
     """)
     print('-'*50, '\n')
 
@@ -80,7 +122,6 @@ def main():
     welcome()
 
     profile = Profile()
-    email_sender = EmailSender()
     scraper = IndeedJobScraper()
 
     preferences = profile.read_user_preferences()
@@ -92,7 +133,9 @@ def main():
     job_list = scraper.extract_next_pages(first_page)
     all_jobs.extend(job_list)
 
-    # now look jobs retrived and send an email
+    to = 'alemnewmarie461@gmail.com'
+    send_email(to, preferences, len(all_jobs))
+
     save_to_excel(all_jobs)
     save_to_csv(all_jobs)
 
