@@ -45,7 +45,7 @@ class Profile():
             file.write(convert_to_str(positions)+'\n')
             file.write(convert_to_str(locations)+'\n')
             file.write(convert_to_str(job_types)+'\n')
-            file.write(convert_to_str(experience)+'\n')
+            file.write(experience + '\n')
 
 
     def read_user_preferences(self):
@@ -59,7 +59,7 @@ class Profile():
                 positions = lines[0].split(',')
                 locations = lines[1].split(',')
                 job_types = lines[2].split(',')
-                experiences = lines[3].split(',')
+                experiences = lines[3].strip()
 
                 sort_by = 'date'
                 last_three_days = '3'
