@@ -64,7 +64,7 @@ def get_job_types():
     return job_types
 
 
-def get_experiences():
+def get_experience():
     """ Filter by experience level."""
     print('-'*50)
     exp_list = ['entry_level', 'mid_level', 'senior_level']
@@ -72,19 +72,23 @@ def get_experiences():
 
     print("\nWhat level of experience(s) do you have?\n")
     print(*exps, sep=', ')
-    print("\nEnter your level of experience one per line. (type END when finished)\n")
+    print("\nEnter your level of experience: ")
 
-    experience = []
+    experience = ''
 
-    answer = input()
-    while answer.lower() != "end":            
-        if answer != '':
-            if answer.lower().startswith('entry'):
-                experience.append(exp_list[0])
-            if answer.lower().startswith('mid'):
-                experience.append(exp_list[1])
-            if answer.lower().startswith('senior'):
-                experience.append(exp_list[2])
-        answer = input()
+    answer = input()            
+    if answer != '':
+        if answer.lower().startswith('entry'):
+            experience = exp_list[0]
+        elif answer.lower().startswith('mid'):
+            experience = exp_list[1]
+        elif answer.lower().startswith('senior'):
+            experience = exp_list[2]
+        else:
+            print('\nYou don\'t provide a correct experience level.\n')
+            get_experience()
+    else:
+        print('\nExperience can\'t be empty.\n')
+        get_experience()
 
     return experience
