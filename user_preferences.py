@@ -59,7 +59,7 @@ class Profile():
                 positions = lines[0].split(',')
                 locations = lines[1].split(',')
                 job_types = lines[2].split(',')
-                experiences = lines[3].strip()
+                experience = lines[3].strip()
 
                 sort_by = 'date'
                 last_three_days = '3'
@@ -70,7 +70,7 @@ class Profile():
                     ('q', positions[0]),
                     ('l', locations[0]),
                     ('jt', job_types[0]),
-                    ('explvl', experiences[0]),
+                    ('explvl', experience),
                     ('sort', sort_by),
                     ('fromage', last_three_days),
                 )
