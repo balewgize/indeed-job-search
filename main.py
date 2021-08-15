@@ -1,9 +1,10 @@
 """
 Indeed job search is a python script that automates job searching on
 www.indeed.com and send notification email to the user when a new job 
-matching the user's profile is posted.
+matching the user's preference is posted.
 
-It checks for new job posts every 3 days.
+It automatically checks for new job posts every Tuesday and Friday at 
+06:00 AM if the device is connected to the internet.
 
 Author: @balewgize
 Date: August, 2013 E.C
@@ -105,31 +106,8 @@ def clear_screen():
     else:
         os.system('clear')
 
-
-def welcome():
-    """ Show welcome message."""
-    msg = 'Indeed Job Search'
-    print(f"{'-'*50}\n{'Welcome!':^50}\n{msg:^50}\n{'-'*50}")
-    print("""
-    I use your job preference to search for jobs
-    relevant to you.
-
-    When I found relevant jobs, I immediately
-    send you an email notification so you can 
-    apply before a deadline.
-
-    Lastly, I will search for jobs every
-    three days. No need of always checking 
-    the website. 
-
-    Now job searching on indeed.com is automated.
-    """)
-    print('-'*50, '\n')
-
-
 def main():
     clear_screen()
-    welcome()
 
     profile = Profile()
     scraper = IndeedJobScraper()
@@ -145,8 +123,3 @@ def main():
     send_email(to, preference, len(data['Job Title']))
 
     save_to_excel(data)
-    # save_to_csv(all_jobs)
-
-
-if __name__ == '__main__':
-    main() 
