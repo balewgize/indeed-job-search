@@ -139,7 +139,6 @@ def main():
     response = scraper.search_jobs(preference)
 
     first_page = BeautifulSoup(response.content, 'lxml')
-    scraper.extract_page(first_page)
     data = scraper.extract_all_pages(first_page)
 
     to = 'alemnewmarie461@gmail.com'
