@@ -82,9 +82,11 @@ class IndeedJobScraper():
                 self.data[column].append(value)
             # job_list.append(job)
 
-    def extract_all_pages(self, current_page):
+    def extract_all_pages(self, first_page):
         """ Extract next result pages from the current page."""
-
+        self.extract_page(first_page)
+        current_page = first_page
+        
         while True:
             next_page = current_page.find('a', {'aria-label': 'Next'})
             try:
