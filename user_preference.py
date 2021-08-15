@@ -10,6 +10,29 @@ class Profile():
     def __init__(self) -> None:
         self.filename = '.job-preferences.txt'
         self.home_dir = self.get_home_dir()
+        self.welcome()
+
+    def welcome(self):
+        """ Show welcome message."""
+        msg = 'Indeed Job Search'
+        print(f"{'-'*50}\n{'Welcome!':^50}\n{msg:^50}\n{'-'*50}")
+        print("""
+        I use your job preference to search for jobs
+        relevant to you.
+
+        When I found relevant jobs, I immediately
+        send you an email notification so you can 
+        apply before a deadline.
+
+        Lastly, I will search for jobs every
+        Tuesday and Friday (You can adjust it to whatever
+        you want). 
+
+        No need of always checking the website. 
+
+        Now job searching on indeed.com is automated.
+        """)
+        print('-'*50, '\n')
 
     def get_home_dir(self):
         """ Get the home directory of the user."""
