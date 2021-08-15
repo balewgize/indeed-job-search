@@ -18,6 +18,16 @@ class IndeedJobScraper():
     """
     def __init__(self):
         self.url = 'https://www.indeed.com/jobs'
+        self.data = {
+            'Job Title': [],
+            'Company': [],
+            'Location': [],
+            'Salary': [],
+            'Posted': [],
+            'Extracted': [],
+            'Summary': [],
+            'Job URL': [],
+        }
 
     def search_jobs(self, preferences):
         """ Search jobs based on user preference."""
@@ -41,7 +51,7 @@ class IndeedJobScraper():
         posted = card.find('span', 'date').text.strip()
         today = datetime.today().strftime("%Y-%m-%d")
 
-        job_summary = card.find('div', 'job-snippet').text.strip()
+        summary = card.find('div', 'job-snippet').text.strip()
         job_url = f"https://www.indeed.com{card.get('href')}"
 
         try:
@@ -49,31 +59,31 @@ class IndeedJobScraper():
         except AttributeError:
             salary = 'N/A'
 
-        job = {
-            'job_title': job_title,
-            'company': company,
-            'location': location,
-            'salary': salary,
-            'posted': posted,
-            'extracted': today,
-            'job_summary': job_summary,
-            'job_url': job_url
-        }
-        return job
+        # job = {
+        #     'job_title': job_title,
+        #     'company': company,
+        #     'location': location,
+        #     'salary': salary,
+        #     'posted': posted,
+        #     'extracted': today,
+        #     'job_summary': job_summary,
+        #     'job_url': job_url
+        # }
+        return [job_title, company, location, salary, posted, today, summary, job_url]
 
     def extract_page(self, html):
         """ Extract details for all jobs on a single page."""
         cards = html.find_all('a', 'tapItem')
-        job_list = []
+        # job_list = []
+
         for card in cards:
             job = self.get_job_detail(card)
-            job_list.append(job)
+            for column, value in zip(self.data.keys(), job):
+                self.data[column].append(value)
+            # job_list.append(job)
 
-        return job_list
-
-    def extract_next_pages(self, current_page):
+    def extract_all_pages(self, current_page):
         """ Extract next result pages from the current page."""
-        job_list = []
 
         while True:
             next_page = current_page.find('a', {'aria-label': 'Next'})
@@ -85,9 +95,8 @@ class IndeedJobScraper():
 
             response = requests.get(next_url)
             current_page = BeautifulSoup(response.content, 'lxml')
-            jobs = self.extract_page(current_page)
-            job_list.extend(jobs)
+            self.extract_page(current_page)
 
             time.sleep(random.randint(6, 10))
 
-        return job_list
+        return self.data
