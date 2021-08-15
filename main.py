@@ -11,7 +11,7 @@ Date: August, 2013 E.C
 from bs4 import BeautifulSoup
 
 from email_sender import EmailSender
-from user_preferences import Profile
+from user_preference import Profile
 from job_scraper import IndeedJobScraper
 
 
@@ -55,9 +55,19 @@ def send_email(to, params, total):
     email_sender.send(to, subject, text, html)
 
 
-def save_to_excel(job_list):
+def save_to_excel(data):
     """ Save job search results to an excel file."""
-    pass
+    import os
+    import pandas as pd
+    from datetime import datetime
+
+    today = datetime.today().strftime('%Y-%m-%d')
+    desktop = os.path.expanduser('~/Desktop/')
+    filename = f'job-list-{today}.xlsx'
+    full_path = os.path.join(desktop, filename)
+
+    df = pd.DataFrame(data)
+    df.to_excel(full_path, sheet_name=f'Jobs-{today}', index=False)
 
 
 def save_to_csv(job_list):
@@ -124,20 +134,19 @@ def main():
     profile = Profile()
     scraper = IndeedJobScraper()
 
-    preferences = profile.read_user_preferences()
+    preference = profile.read_user_preferences()
     print("\nSearching for jobs...")
-    response = scraper.search_jobs(preferences)
+    response = scraper.search_jobs(preference)
 
     first_page = BeautifulSoup(response.content, 'lxml')
-    all_jobs = scraper.extract_page(first_page)
-    job_list = scraper.extract_next_pages(first_page)
-    all_jobs.extend(job_list)
+    scraper.extract_page(first_page)
+    data = scraper.extract_all_pages(first_page)
 
     to = 'alemnewmarie461@gmail.com'
-    send_email(to, preferences, len(all_jobs))
+    send_email(to, preference, len(data['Job Title']))
 
-    save_to_excel(all_jobs)
-    save_to_csv(all_jobs)
+    save_to_excel(data)
+    # save_to_csv(all_jobs)
 
 
 if __name__ == '__main__':
