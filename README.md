@@ -1,7 +1,16 @@
-# Indeed Job post notifier
+# Indeed Job Search
 
-Indeed job notifier is a python script that automates job searching on www.indeed.com.
+Indeed job search is a python script that automates job searching on
+www.indeed.com and send notification email to the user when a new job 
+matching the user's preference is posted.
 
-The user will provide the profile and other details that can used for searching relevant jobs
+It automatically checks for new job posts every Tuesday and Friday at 
+06:00 AM if the device is connected to the internet.
 
-The program will then send notification email to the user when a new job matching the user's profile is posted.
+
+## Installation 
+- Clone the repository to a directory you want
+- Add cron job task that execute run.py file every Tuesday and Friday
+  at 06:00 AM
+
+## Usage
