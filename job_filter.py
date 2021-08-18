@@ -36,34 +36,6 @@ def get_locations():
     return locations
 
 
-def get_job_types():
-    """ Filter by job type."""
-    print('-'*50)
-    type_list = ['fulltime', 'contract', 'parttime', 'internship']
-    types = ['Full time', 'Contract', 'Part time', 'Internship']
-
-    print("\nWhat type of jobs would you like to work on?\n")
-    print(*types, sep=', ')
-    print('\nEnter one job type per line. (type "END" when finished)\n')
-    
-    job_types = []
-
-    answer = input()
-    while answer.lower() != "end":           
-        if answer != '':
-            if answer.lower().startswith('full'):
-                job_types.append(type_list[0])
-            if answer.lower().startswith('cont'):
-                job_types.append(type_list[1])
-            if answer.lower().startswith('part'):
-                job_types.append(type_list[2])
-            if answer.lower().startswith('intern'):
-                job_types.append(type_list[3])
-        answer = input()
-
-    return job_types
-
-
 def get_experience():
     """ Filter by experience level."""
     print('-'*50)
