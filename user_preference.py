@@ -2,15 +2,15 @@
 Preferences/Job filters to get relevant jobs for the user
 """
 import os, sys
+import itertools
 import job_filter
 
 
 class Profile():
-    """ User profile/preferences to filter jobs."""
-    def __init__(self) -> None:
-        self.filename = '.job-preferences.txt'
+    """ User profile/preference to filter jobs."""
+    def __init__(self):
+        self.filename = '.job-preference.txt'
         self.home_dir = self.get_home_dir()
-        self.welcome()
 
     def welcome(self):
         """ Show welcome message."""
@@ -21,14 +21,14 @@ class Profile():
         relevant to you.
 
         When I found relevant jobs, I immediately
-        send you an email notification so you can 
-        apply before a deadline.
+        send you an email notification to enable
+        you apply before a deadline.
 
         Lastly, I will search for jobs every
         Tuesday and Friday (You can adjust it to whatever
         you want). 
 
-        No need of always checking the website. 
+        No need of manually checking the website. 
 
         Now job searching on indeed.com is automated.
         """)
@@ -45,15 +45,15 @@ class Profile():
 
     def get_user_preferences(self):
         """ Get the user preference to save for later use."""
+        self.welcome()
         positions = job_filter.get_positions()
         locations = job_filter.get_locations()
-        job_types = job_filter.get_job_types() 
         experience = job_filter.get_experience()
 
-        self.save_user_preferences(positions, locations, job_types, experience)
+        self.save_user_preferences(positions, locations, experience)
 
 
-    def save_user_preferences(self, positions, locations, job_types, experience):
+    def save_user_preferences(self, positions, locations, experience):
         """ Save user preferences for later use."""
         def convert_to_str(iterable):
             """ Conver an iterable to comma separated string."""
@@ -67,7 +67,6 @@ class Profile():
         with open(full_path, 'w') as file:
             file.write(convert_to_str(positions)+'\n')
             file.write(convert_to_str(locations)+'\n')
-            file.write(convert_to_str(job_types)+'\n')
             file.write(experience + '\n')
 
 
@@ -81,22 +80,13 @@ class Profile():
                 lines = list(map(lambda x: x.replace('\n', ''), lines))
                 positions = lines[0].split(',')
                 locations = lines[1].split(',')
-                job_types = lines[2].split(',')
-                experience = lines[3].strip()
+                experience = [lines[2].strip()]
 
-                sort_by = 'date'
-                last_three_days = '3'
+                p = [positions, locations, experience]
+                prefs = list(itertools.product(*p))
+                short = ('q', 'l', 'jt', 'explvl')
+                params = [tuple(zip(short, param)) for param in prefs]
 
-                # how to handle all variation of this preferences?
-
-                params = (
-                    ('q', positions[0]),
-                    ('l', locations[0]),
-                    ('jt', job_types[0]),
-                    ('explvl', experience),
-                    ('sort', sort_by),
-                    ('fromage', last_three_days),
-                )
                 return params
         else:
             ch = input('Would you like to set your job preference now? [Y/N]: ')
