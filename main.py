@@ -9,85 +9,76 @@ It automatically checks for new job posts every Tuesday and Friday at
 Author: @balewgize
 Date: August, 2013 E.C
 """
+import os, time, random
+from datetime import datetime
 from bs4 import BeautifulSoup
+import pandas as pd
 
 from email_sender import EmailSender
 from user_preference import Profile
 from job_scraper import IndeedJobScraper
 
 
-def send_email(to, params, total):
+def send_email(to, params, jobs_url):
     """ Send email notification about the jobs posted."""
-    import requests
-    from datetime import datetime
     today = datetime.today().strftime('%Y-%m-%d')
-    base_url = 'https://www.indeed.com/jobs'
-    job_url = requests.get(base_url, params=params).url
-
     subject = f'New Indeed jobs for you on {today}'
 
-    text = f"""\
-        Hello Alemnew,
-
-        {total} New jobs matching your preference have been posted in the last three days
-
-        See details and Apply here: {job_url}
-
-        Good Luck,
-        Python Email Sender
-    """
+    text = "Hello Alemnew,\n\n" + \
+            "New jobs posts in the last three days.\n\n"
+    for param, url in zip(params, jobs_url):
+        position = param[0][1]
+        location = param[1][1]
+        count = count_jobs(position, location)
+        text += f'{count} {position} jobs in {location}\n'
+    text += "\nGood Luck!"
 
     html = f"""\
-        <html>
-        <body>
-            <p> Hello Alemnew, <br> <br>
-                {total} New jobs matching your preference have been posted in the last three days.
-                <br><br>
-                Take a look here: <br> {job_url}
-            </p>
-            <p>
-                Good Luck, <br>
-                Python Email Sender
-            </p>
-        </body>
-        </html>
+    <html>
+    <body>
+        <p> Hello Alemnew, <br> <br>
+            New job posts in the last three days. <br><br>
+        </p>
+    """
+    for param, url in zip(params, jobs_url):
+        position = param[0][1]
+        location = param[1][1]
+        count = count_jobs(position, location)
+        html += f'<a href="{url}">{count} {position} jobs in {location}</a> <br>'
+
+    html += """
+        <p>
+            Good Luck, <br>
+            Python Email Sender
+        </p>
+    </body>
+    </html>
     """
     email_sender = EmailSender()
     email_sender.send(to, subject, text, html)
 
+def count_jobs(position, location):
+    """ Return how many jobs with the given postion and location."""
+    today = datetime.today().strftime('%Y-%m-%d')
+    home_dir = get_home_dir()
+    filename = f'job-list-{today}.xlsx'
+    full_path = os.path.join(home_dir, 'Desktop/'+filename)
+
+    jobs = pd.read_excel(full_path)
+    count = 0
+    return count
 
 def save_to_excel(data):
     """ Save job search results to an excel file."""
-    import os
     import pandas as pd
-    from datetime import datetime
 
     today = datetime.today().strftime('%Y-%m-%d')
-    desktop = os.path.expanduser('~/Desktop/')
+    home_dir = get_home_dir()
     filename = f'job-list-{today}.xlsx'
-    full_path = os.path.join(desktop, filename)
+    full_path = os.path.join(home_dir, 'Desktop/'+filename)
 
     df = pd.DataFrame(data)
     df.to_excel(full_path, sheet_name=f'Jobs-{today}', index=False)
-
-
-def save_to_csv(job_list):
-    """ Write the list of jobs given to a csv file."""
-    import os, csv
-    from datetime import datetime
-
-    today = datetime.today().strftime('%Y-%m-%d')
-    desktop = os.path.expanduser('~/Desktop/')
-    filename = f'job-list-{today}.csv'
-    full_path = os.path.join(desktop, filename)
-
-    with open(full_path, 'w') as file:
-        fieldnames = job_list[0].keys()
-        csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
-        csv_writer.writeheader()
-        csv_writer.writerows(job_list)
-
-    print("The result has been saved to a csv file on your Desktop.")
 
 
 def get_home_dir():
@@ -112,14 +103,28 @@ def main():
     profile = Profile()
     scraper = IndeedJobScraper()
 
+    jobs_url = [] # url to the result page of each job search
+
     preference = profile.read_user_preferences()
     print("\nSearching for jobs...")
-    response = scraper.search_jobs(preference)
+    for params in preference:
+        params = list(params)
+        params.append(('sort', 'date')) # newest first
+        params.append(('fromage', '3')) # last three days
+        params = tuple(params)
+        position = params[0][1][1:-1] # e.g Python developer
 
-    first_page = BeautifulSoup(response.content, 'lxml')
-    data = scraper.extract_all_pages(first_page)
+        response = scraper.search_jobs(params)
+        jobs_url.append(response.url)
+
+        if response.status_code == 200:
+            first_page = BeautifulSoup(response.content, 'lxml')
+            scraper.extract_all_pages(first_page, position)
+        # wait some seconds before sending the next request    
+        time.sleep(random.randint(6, 10))
+
+    data = scraper.data
+    save_to_excel(data)
 
     to = 'alemnewmarie461@gmail.com'
-    send_email(to, preference, len(data['Job Title']))
-
-    save_to_excel(data)
+    send_email(to, preference, jobs_url)
