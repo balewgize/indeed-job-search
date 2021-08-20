@@ -20,6 +20,7 @@ class IndeedJobScraper():
         self.url = 'https://www.indeed.com/jobs'
         self.data = {
             'Job Title': [],
+            'Position': [],
             'Company': [],
             'Location': [],
             'Salary': [],
@@ -37,7 +38,7 @@ class IndeedJobScraper():
         response = requests.get(self.url, headers=headers, params=preferences)
         return response
 
-    def get_job_detail(cself, card):
+    def get_job_detail(self, card, position):
         """ Extract the Job details for a single job."""
         title_con = card.find('h2', 'jobTitle').contents[-1]
         job_title = title_con.text.strip()
@@ -59,32 +60,20 @@ class IndeedJobScraper():
         except AttributeError:
             salary = 'N/A'
 
-        # job = {
-        #     'job_title': job_title,
-        #     'company': company,
-        #     'location': location,
-        #     'salary': salary,
-        #     'posted': posted,
-        #     'extracted': today,
-        #     'job_summary': job_summary,
-        #     'job_url': job_url
-        # }
-        return [job_title, company, location, salary, posted, today, summary, job_url]
+        return [job_title, position, company, location, salary, posted, today, summary, job_url]
 
-    def extract_page(self, html):
+    def extract_page(self, html, position):
         """ Extract details for all jobs on a single page."""
         cards = html.find_all('a', 'tapItem')
-        # job_list = []
 
         for card in cards:
-            job = self.get_job_detail(card)
+            job = self.get_job_detail(card, position)
             for column, value in zip(self.data.keys(), job):
                 self.data[column].append(value)
-            # job_list.append(job)
 
-    def extract_all_pages(self, first_page):
-        """ Extract next result pages from the current page."""
-        self.extract_page(first_page)
+    def extract_all_pages(self, first_page, position):
+        """ Extract all result pages appeared."""
+        self.extract_page(first_page, position)
         current_page = first_page
         
         while True:
