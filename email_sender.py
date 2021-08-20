@@ -38,8 +38,8 @@ class EmailSender():
             app_password: used to gain access to the gmail address given
         """
         import os
-        home_dir = os.path.expanduser('~/')
-        full_path = os.path.join(home_dir, '.app-credentials.txt')
+        home_dir = self.get_home_dir()
+        full_path = os.path.join(home_dir, '.email-sender.txt')
 
         if os.path.exists(full_path):
             with open(full_path, 'r') as file:
@@ -58,7 +58,6 @@ class EmailSender():
     def get_valid_email(self):
         """ Get valid email address from user."""
         answer = input('\nEnter your Gmail address: \n').strip()
-        # TODO: check for email validity using regular expressions
         return answer
     
     def get_app_password(self):
@@ -70,7 +69,15 @@ class EmailSender():
             print('Please provide a valid Google App password.')
             self.get_app_password()
 
-    def send(self, to_addr, subject, text, html='', attachments=[]):
+    def get_home_dir(self):
+        """ Get the home directory of the user based the Operating System."""
+        import os
+        if os.name == 'nt': 
+            return os.path.expanduser('~\\')
+        else:
+            return os.path.expanduser('~/')
+
+    def send(self, to_addr, subject, text, html=''):
         """ Send an email message to the receiver."""
         from_addr = self.gmail_address
 
@@ -102,8 +109,8 @@ class EmailSender():
             print(f'\n\n{"-"*70}\n'+
             f'If you keep getting this error message after retrying a few more times,\n'+
             f'first check your internet connection. If that\'s ok,\n'
-            f'the Gmial address or App password you provide may be incorrect\n'
-            f'So, go to your Home directory and delete ".app-credentials.txt" file\n'+
+            f'the Gmail address or App password you provide may be incorrect\n'
+            f'So, go to your Home directory and delete ".email-sender.txt" file\n'+
             f'(It is hidden by default) and run the program again.\n{"-"*70}')
         finally:
             server.quit()
