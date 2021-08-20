@@ -84,7 +84,7 @@ class Profile():
 
                 p = [positions, locations, experience]
                 prefs = list(itertools.product(*p))
-                short = ('q', 'l', 'jt', 'explvl')
+                short = ('q', 'l', 'explvl')
                 params = [tuple(zip(short, param)) for param in prefs]
 
                 return params
