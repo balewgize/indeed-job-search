@@ -13,7 +13,6 @@ import os, time, random
 from datetime import datetime
 from bs4 import BeautifulSoup
 import pandas as pd
-from requests.api import post
 
 from email_sender import EmailSender
 from user_preference import Profile
@@ -28,10 +27,11 @@ def send_email(to, params, jobs_url):
     text = "Hello Alemnew,\n\n" + \
             "New jobs posts in the last three days.\n\n"
     for param, url in zip(params, jobs_url):
-        position = param[0][1]
+        position = param[0][1][1:-1]
         location = param[1][1]
         count = count_jobs(position, location)
-        text += f'{count} {position} jobs in {location}\n'
+        if count > 0:
+            text += f'{count} {position} jobs in {location}\n'
     text += "\nGood Luck!"
 
     html = f"""\
@@ -66,7 +66,6 @@ def count_jobs(position, location):
     filename = f'job-list-{today}.xlsx'
     full_path = os.path.join(home_dir, 'Desktop/'+filename)
 
-    # TODO: counting number of jobs using pandas
     jobs = pd.read_excel(full_path)
     filter = (jobs['Position'] == position) & \
             (jobs['Location'] == location)
