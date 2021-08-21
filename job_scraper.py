@@ -47,7 +47,11 @@ class IndeedJobScraper():
         company = company_con.text.strip()
 
         location_con = card.find('div', 'companyLocation')
-        location = location_con.contents[0].strip()
+        if len(location_con.contents) == 1:
+            location = location_con.text.strip()
+        else:
+            location = location_con.contents[0].strip()
+
 
         posted = card.find('span', 'date').text.strip()
         today = datetime.today().strftime("%Y-%m-%d")
@@ -86,7 +90,7 @@ class IndeedJobScraper():
 
             response = requests.get(next_url)
             current_page = BeautifulSoup(response.content, 'lxml')
-            self.extract_page(current_page)
+            self.extract_page(current_page, position)
 
             time.sleep(random.randint(6, 10))
 
