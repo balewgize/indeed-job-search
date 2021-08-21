@@ -26,9 +26,7 @@ def search_jobs():
     """ Triggers the main function of main.py"""
     connected = is_connected()
     if connected:
-        # search jobs and send an email
-        main.main()
-
+        main.main() # search jobs and send an email
         # once the job search is done, cancel the job task
         return schedule.CancelJob
 
@@ -41,9 +39,8 @@ schedule.every(30).minutes.do(search_jobs)
 while True:
     n = schedule.idle_seconds()
     if n is None:
-        # no more jobs
-        break
+        break # no more jobs
     elif n > 0:
-        # sleep the right amount of time
-        time.sleep(n)
+        time.sleep(n) # sleep the right amount of time
+        
     schedule.run_pending()
