@@ -11,9 +11,11 @@ It automatically checks for new job posts every Tuesday and Friday at
 If the device has no internet connection at that time, which is inevitable, 
 it will check if the device comes online every thirty minutes.
 
-The script uses cron jobs (on Linux and Mac) 
-<a href="https://www.youtube.com/watch?v=QZJ1drMQz1A"> Learn more </a> and 
-Windows Task Scheduler (on Windows) to schedule the script to run automatically.
+The script can scheduled using cron jobs on Linux and Mac 
+<a href="https://www.youtube.com/watch?v=QZJ1drMQz1A"> (Learn more) </a>
+
+
+Or Windows Task Scheduler on Windows to be executed automatically.
 
 
 ## Requirement
@@ -29,7 +31,7 @@ Windows Task Scheduler (on Windows) to schedule the script to run automatically.
   at your prefered time (in 24 hour format) 
 - <a href="https://crontab.guru/"> cron jobs to shchedule tasks in Linux</a>
 - For example, the following cron job schedules the script to run every Tuesday and Friday at 05:00 AM (11:00 in 24 hour format)
-- You can have the same schedule using Windows Task Scheduler
 ```
 00 11 * * 2,5 /usr/bin/python3 ~/python/projects/indeed-job-search/run.py
 ```
+- You can have the same schedule using Windows Task Scheduler
