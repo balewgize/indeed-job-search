@@ -9,12 +9,11 @@ from bs4 import BeautifulSoup
 
 
 class IndeedJobScraper():
-    """ Indeed job scraper.
+    """ Indeed job scraper class.
 
-    Scrape job posts from www.indeed.com based on user preferences
-
-    returns:
-        list of jobs
+    Scrape job posts from www.indeed.com based on user preference and return
+    details about the jobs including: Job title, position, company, location,
+    salary(if any), post date, job summary, and job url.
     """
     def __init__(self):
         self.url = 'https://www.indeed.com/jobs'
