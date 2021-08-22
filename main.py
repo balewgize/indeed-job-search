@@ -143,5 +143,5 @@ def main():
     # TO: this email address is used by the scipt to send you notificaion emails when new job
     # posts matching your prefernce is posted
     
-    to = 'Your Email for receiving notification here'
+    to = 'Your Email to get notification here'
     send_email(to, preference, jobs_url)
