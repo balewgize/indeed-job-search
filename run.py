@@ -34,7 +34,7 @@ def search_jobs():
     we need to check whether the device has an internet connection every 30 min
 """
 
-schedule.every(30).minutes.do(search_jobs)
+schedule.every(10).minutes.do(search_jobs)
 
 while True:
     n = schedule.idle_seconds()
