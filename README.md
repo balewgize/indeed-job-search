@@ -27,6 +27,9 @@ Or Windows Task Scheduler on Windows to be executed automatically.
 - Clone the repository to a directory you want
 - Navigate to the indeed-job-search directory and open main.py
 - in main() function, put your email address to be notified
+- now simply execute run.py from your Terminal
+
+BONUS:
 - Add cron job task that execute run.py file every Tuesday and Friday
   at your prefered time (in 24 hour format) 
 - <a href="https://crontab.guru/"> cron jobs to shchedule tasks in Linux</a>
