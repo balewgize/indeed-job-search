@@ -48,8 +48,10 @@ class IndeedJobScraper():
         location_con = card.find('div', 'companyLocation')
         if len(location_con.contents) == 1:
             location = location_con.text.strip()
-        else:
+        elif len(location_con) > 1:
             location = location_con.contents[0].strip()
+        else:
+            location = ''
 
 
         posted = card.find('span', 'date').text.strip()
