@@ -72,6 +72,11 @@ def count_jobs(position, location):
     filtered_jobs = jobs.loc[filter]
     count = len(filtered_jobs)
 
+    if count == 0:
+        filter = (jobs['Position'] == position)
+        filtered_jobs = jobs.loc[filter]
+        count = len(filtered_jobs)
+
     return count
 
 def save_to_excel(data):
@@ -132,7 +137,5 @@ def main():
     data = scraper.data
     save_to_excel(data)
 
-    to = 'alemnewmarie461@gmail.com'
+    to = 'Your second Email address here'
     send_email(to, preference, jobs_url)
-
-main()
