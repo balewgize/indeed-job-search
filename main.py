@@ -9,14 +9,17 @@ It automatically checks for new job posts every Tuesday and Friday at
 Author: @balewgize
 Date: August, 2013 E.C
 """
-import os, time, random
+import os, sys
+import time, random
 from datetime import datetime
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from email_sender import EmailSender
-from user_preference import Profile
-from job_scraper import IndeedJobScraper
+sys.path.append('utils') # used for importing modules inside utils directory
+
+from utils.email_sender import EmailSender
+from utils.user_preference import Profile
+from utils.job_scraper import IndeedJobScraper
 
 
 def send_email(to, params, jobs_url):
@@ -140,5 +143,5 @@ def main():
     # TO: this email address is used by the scipt to send you notificaion emails when new job
     # posts matching your prefernce is posted
     
-    to = 'Your second Email address here'
+    to = 'Your Email for receiving notification here'
     send_email(to, preference, jobs_url)
