@@ -137,5 +137,8 @@ def main():
     data = scraper.data
     save_to_excel(data)
 
+    # TO: this email address is used by the scipt to send you notificaion emails when new job
+    # posts matching your prefernce is posted
+    
     to = 'Your second Email address here'
     send_email(to, preference, jobs_url)
