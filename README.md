@@ -39,3 +39,9 @@ BONUS:
 00 11 * * 2,5 /usr/bin/python3 /path/to/indeed-job-search/run.py
 ```
 - You can have the same schedule using Windows Task Scheduler(If you are on windows).
+
+Using the script without scheduling
+- open your Terminal (cmd) and execute run.py
+```
+$ python3 /path/to/indeed-job-search/run.py
+```
