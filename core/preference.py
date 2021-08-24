@@ -3,7 +3,8 @@ Preferences/Job filters to get relevant jobs for the user
 """
 import os, sys
 import itertools
-import job_filter
+
+import filter
 
 
 class Profile():
