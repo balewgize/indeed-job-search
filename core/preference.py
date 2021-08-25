@@ -47,9 +47,9 @@ class Profile():
     def get_user_preferences(self):
         """ Get the user preference to save for later use."""
         self.welcome()
-        positions = job_filter.get_positions()
-        locations = job_filter.get_locations()
-        experience = job_filter.get_experience()
+        positions = filter.get_positions()
+        locations = filter.get_locations()
+        experience = filter.get_experience()
 
         self.save_user_preferences(positions, locations, experience)
 
