@@ -8,7 +8,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 
-class IndeedJobScraper():
+class Scraper():
     """ Indeed job scraper class.
 
     Scrape job posts from www.indeed.com based on user preference and return

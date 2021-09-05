@@ -7,7 +7,7 @@ import itertools
 import filter
 
 
-class Profile():
+class Preference():
     """ User profile/preference to filter jobs."""
     def __init__(self):
         self.filename = '.job-preference.txt'
